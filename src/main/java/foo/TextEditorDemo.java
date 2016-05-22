@@ -1,6 +1,7 @@
 package foo;
 
 import java.awt.*;
+import java.io.IOException;
 import javax.swing.*;
 
 import org.fife.ui.rtextarea.*;
@@ -13,45 +14,29 @@ import org.fife.ui.rsyntaxtextarea.*;
  * http://bobbylight.github.io/RSyntaxTextArea/
  *
  */
-public class TextEditorDemo extends JFrame implements Runnable {
+public class TextEditorDemo extends JPanel {
 
    private static final long serialVersionUID = 1L;
 
    public TextEditorDemo() {
 
-      JPanel cp = new JPanel(new BorderLayout());
+      setLayout(new BorderLayout());
 
-      RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
-      textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+      final RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
+      textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
       textArea.setCodeFoldingEnabled(true);
-      RTextScrollPane sp = new RTextScrollPane(textArea);
-      cp.add(sp);
 
-      setContentPane(cp);
-      setTitle("Text Editor Demo");
-      setDefaultCloseOperation(EXIT_ON_CLOSE);
-      pack();
-      setLocationRelativeTo(null);
+      final RTextScrollPane sp = new RTextScrollPane(textArea);
+      this.add(sp, BorderLayout.CENTER);
+
+       try {
+           Theme theme = Theme.load(getClass().getResourceAsStream(
+                   "/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
+           theme.apply(textArea);
+       } catch (IOException ioe) { // Never happens
+           ioe.printStackTrace();
+       }
 
    }
-   
-   public void run() {
-	   this.setVisible(true);
-   }
 
-   public static void main(String[] args) {
-	   SwingUtilities.invokeLater(new TextEditorDemo());
-	   // The line below invokes the original implementation:
-	   // start(args);
-   }
-
-   public static void start(String[] args) {
-      // Start all Swing applications on the EDT.
-      SwingUtilities.invokeLater(new Runnable() {
-         public void run() {
-            new TextEditorDemo().setVisible(true);
-         }
-      });	   
-   }
-   
 }
