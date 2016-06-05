@@ -1,11 +1,13 @@
 package foo;
 
+import com.alee.laf.label.WebLabel;
+import com.alee.laf.panel.WebPanel;
+import com.alee.laf.splitpane.WebSplitPane;
+import com.alee.laf.tabbedpane.WebTabbedPane;
 import java.awt.*;
-import java.io.IOException;
 import javax.swing.*;
+import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
 
-import org.fife.ui.rtextarea.*;
-import org.fife.ui.rsyntaxtextarea.*;
 
 /**
  * A simple example showing how to use RSyntaxTextArea to add Java syntax
@@ -16,27 +18,34 @@ import org.fife.ui.rsyntaxtextarea.*;
  */
 public class TextEditorDemo extends JPanel {
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   public TextEditorDemo() {
+    public TextEditorDemo() {
 
-      setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
-      final RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
-      textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
-      textArea.setCodeFoldingEnabled(true);
+        // Left part content
+        WebLabel leftLabel = new WebLabel ( "left", WebLabel.CENTER );
+        leftLabel.setMargin ( 5 );
+        WebPanel leftPanel = new WebPanel ( true, leftLabel );
 
-      final RTextScrollPane sp = new RTextScrollPane(textArea);
-      this.add(sp, BorderLayout.CENTER);
+        // Right part content
+        WebTabbedPane workspaces = new WebTabbedPane();
+        workspaces.addTab("(unsaved)*", new TemplateWorkspaceView());
+        workspaces.addTab("(unsaved)*", new TemplateWorkspaceView());
 
-       try {
-           Theme theme = Theme.load(getClass().getResourceAsStream(
-                   "/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
-           theme.apply(textArea);
-       } catch (IOException ioe) { // Never happens
-           ioe.printStackTrace();
-       }
+        WebPanel rightPanel = new WebPanel ( true );
+        rightPanel.add(workspaces, BorderLayout.CENTER);
 
-   }
+        // Split
+        WebSplitPane splitPane = new WebSplitPane ( HORIZONTAL_SPLIT, leftPanel, rightPanel );
+        splitPane.setOneTouchExpandable ( true );
+        splitPane.setPreferredSize ( new Dimension ( 250, 200 ) );
+        splitPane.setDividerLocation ( 125 );
+        splitPane.setContinuousLayout ( true );
+
+        this.add(splitPane, BorderLayout.CENTER);
+
+    }
 
 }

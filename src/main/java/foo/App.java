@@ -5,6 +5,7 @@ import org.jwellman.foundation.Foundation;
 import org.jwellman.foundation.interfaces.uiCustomTheme;
 import org.jwellman.foundation.swing.IWindow;
 import org.jwellman.foundation.uContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Hello world!
@@ -34,6 +35,9 @@ public class App implements uiCustomTheme {
      * @param args
      */
     public static void main(String[] args) {
+        final String[] contextPaths = new String[] {"editor/app-context.xml"};
+        new ClassPathXmlApplicationContext(contextPaths);
+
         new App().startup(true, args);
     }
 
@@ -49,17 +53,17 @@ public class App implements uiCustomTheme {
     private App startup(boolean asMainFrame, String[] args) {
 
         // Prepare - User Interface Context
-        int uiunit = 65;
-        final uContext context = uContext.createContext();
-        context.setTheme(this);
-        context.setDimension(uiunit * 5, uiunit * 9);
+//        int uiunit = 65;
+//        final uContext context = uContext.createContext();
+//        context.setTheme(this);
+//        context.setDimension(uiunit * 5, uiunit * 9);
 
         // Step 1 - Initialize Swing
         final Foundation f = Foundation.get();
-        f.init(context);
+        f.init(); // context
 
         // Step 2 - Create your UIs in JPanel(s)
-        mainui = f.registerUI("clock", new TextEditorDemo()); // ITunesPanel | StopWatch | MainPanel
+        mainui = f.registerUI("editor", new TextEditorDemo()); 
 
         // Step 3 - Use Foundation to create your "window"; give it your UI.
         window = f.useWindow(mainui);
@@ -77,6 +81,7 @@ public class App implements uiCustomTheme {
         return this;
     }
 
+    @Override
     public void doCustomTheme() {
         // TODO implement theme if necessary
     }
