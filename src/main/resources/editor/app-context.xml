@@ -4,8 +4,24 @@
 
 <beans>
 
-  <bean id="foundationFramework"  init-method="init"
-      class="org.jwellman.foundation.Foundation">
-  </bean>
+    <bean id="foundationFramework" init-method="init"
+        class="org.jwellman.foundation.Foundation">
+    </bean>
+
+    <bean id="beanVelocityEngine"
+        class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+    </bean>
+
+    <bean id="beanUserInterface"
+        class="foo.TextEditorDemo">
+        <property name="velocityEngine" ref="beanVelocityEngine" />
+    </bean>
+
+<!--        <property name="velocityProperties">
+            <value>
+                resource.loader=class
+                class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+            </value>
+        </property>-->
 
 </beans>

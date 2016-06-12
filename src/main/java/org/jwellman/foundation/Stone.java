@@ -82,7 +82,7 @@ public void init(uContext c) {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 final String name = info.getName(); System.out.println(name);
                 if ("Nimbus".equals(name)) {
-                    final int version = 3;
+                    final int version = 2;
                     switch (version) {
                         case 1:
                             UIManager.setLookAndFeel(info.getClassName());

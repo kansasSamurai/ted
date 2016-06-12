@@ -3,6 +3,7 @@ package foo;
 import com.alee.extended.panel.WebButtonGroup;
 import com.alee.laf.button.WebToggleButton;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.io.IOException;
 import javax.swing.JPanel;
@@ -19,14 +20,18 @@ public class TemplateWorkspaceView extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    final private RSyntaxTextArea textArea;
+    final private JPanel editorHolder;
+
+    final private RSyntaxTextArea dataEditor;
+    final private RSyntaxTextArea templateEditor;
+    final private RSyntaxTextArea resultEditor;
 
     final private TemplateWorkspace datamodel;
 
     // ----- Template Views -----
-    final WebToggleButton dataEditor;
-    final WebToggleButton outputEditor;
-    final WebToggleButton templateEditor;
+    final WebToggleButton btnDataEditor;
+    final WebToggleButton btnOutputEditor;
+    final WebToggleButton btnTemplateEditor;
 
     // ----- Template Engine -----
     final WebToggleButton velocity;
@@ -46,14 +51,16 @@ public class TemplateWorkspaceView extends JPanel {
         this.setLayout(new BorderLayout());
         this.datamodel = new TemplateWorkspace();
 
+        this.editorHolder = new JPanel(new CardLayout());
+
         final JPanel pnlNorth = new JPanel();
         pnlNorth.setLayout(new FlowLayout());
 
-        dataEditor = new WebToggleButton ( "Data Model" );
-        outputEditor = new WebToggleButton ( "Output" );
-        templateEditor = new WebToggleButton ( "Template" );
-        WebButtonGroup grpEditorSelection = new WebButtonGroup ( true, templateEditor, dataEditor, outputEditor );
-        pnlNorth.add(grpEditorSelection);
+        WebButtonGroup pnlEditorSelection = new WebButtonGroup ( true );
+        pnlEditorSelection.add( btnTemplateEditor = createEditorButton( editorHolder, Editor.TEMPLATE ) );
+        pnlEditorSelection.add( btnDataEditor = createEditorButton( editorHolder, Editor.DATA ) );
+        pnlEditorSelection.add( btnOutputEditor = createEditorButton( editorHolder, Editor.RESULT ) );
+        pnlNorth.add(pnlEditorSelection);
 
         WebButtonGroup pnlTemplateSelection = new WebButtonGroup ( true );
         pnlTemplateSelection.add(velocity = createEngineButton( Engine.VELOCITY ));
@@ -70,25 +77,42 @@ public class TemplateWorkspaceView extends JPanel {
         pnlSyntaxSelection.add(json = createSyntaxButton(Syntax.JSON));
         pnlNorth.add(pnlSyntaxSelection);
 
-        textArea = new RSyntaxTextArea(20, 60);
-        textArea.setCodeFoldingEnabled(true);
-        //textArea.setEOLMarkersVisible(true);
-        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-        // SYNTAX_STYLE_HTML
-        final RTextScrollPane sp = new RTextScrollPane(textArea);
+        dataEditor = new RSyntaxTextArea(20, 60);
+            dataEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
+        resultEditor = new RSyntaxTextArea(20, 60);
+            resultEditor.setCodeFoldingEnabled(true);
+        templateEditor = new RSyntaxTextArea(20, 60);
+            templateEditor.setCodeFoldingEnabled(true);
+            templateEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+        final RTextScrollPane spTemplateEditor = new RTextScrollPane(templateEditor);
+        final RTextScrollPane spDataEditor = new RTextScrollPane(dataEditor);
+        final RTextScrollPane spResultEditor = new RTextScrollPane(resultEditor);
+
+        this.editorHolder.add(spTemplateEditor, Editor.TEMPLATE.getUiMnemonic());
+        this.editorHolder.add(spDataEditor, Editor.DATA.getUiMnemonic());
+        this.editorHolder.add(spResultEditor, Editor.RESULT.getUiMnemonic()
+        );
 
         // Right part content
-        this.add(sp, BorderLayout.CENTER);
+        this.add(editorHolder, BorderLayout.CENTER);
         this.add(pnlNorth, BorderLayout.NORTH);
 
         try {
             Theme theme = Theme.load(getClass().getResourceAsStream(
                     "/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
-            theme.apply(textArea);
+            theme.apply(templateEditor);
+            theme.apply(dataEditor);
+            theme.apply(resultEditor);
         } catch (IOException ioe) { // Never happens
             ioe.printStackTrace();
         }
 
+    }
+
+    private WebToggleButton createEditorButton(JPanel p, Editor e) {
+        final WebToggleButton b = new WebToggleButton();
+        b.setAction(new ActionEditorSelector(p, e));
+        return b;
     }
 
     private WebToggleButton createSyntaxButton(Syntax syntax) {
@@ -104,7 +128,7 @@ public class TemplateWorkspaceView extends JPanel {
     }
 
     public void setTemplateSyntax(String syntax) {
-        this.textArea.setSyntaxEditingStyle(syntax);
+        this.templateEditor.setSyntaxEditingStyle(syntax);
     }
 
 }

@@ -7,6 +7,7 @@ import com.alee.laf.tabbedpane.WebTabbedPane;
 import java.awt.*;
 import javax.swing.*;
 import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
+import org.apache.velocity.app.VelocityEngine;
 
 
 /**
@@ -19,6 +20,9 @@ import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
 public class TextEditorDemo extends JPanel {
 
     private static final long serialVersionUID = 1L;
+
+    // TODO, is there a better way to initialize the engines from spring xml?
+    private VelocityEngine velocityEngine;
 
     public TextEditorDemo() {
 
@@ -46,6 +50,18 @@ public class TextEditorDemo extends JPanel {
 
         this.add(splitPane, BorderLayout.CENTER);
 
+    }
+
+    public VelocityEngine getVelocityEngine() {
+        return velocityEngine;
+    }
+
+    public void setVelocityEngine(VelocityEngine velocityEngine) {
+        this.velocityEngine = velocityEngine;
+
+        TemplateEngine te = new VelocityTemplateEngine();
+        te.setEngine(velocityEngine);
+        Engine.VELOCITY.setTemplateEngine(te);
     }
 
 }
