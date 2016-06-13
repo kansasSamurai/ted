@@ -10,18 +10,18 @@
 
     <bean id="beanVelocityEngine"
         class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <value>
+                resource.loader = string
+                string.resource.loader.class = org.apache.velocity.runtime.resource.loader.StringResourceLoader
+                string.resource.loader.description = Velocity StringResource loader
+                </value>
+        </property>
     </bean>
 
     <bean id="beanUserInterface"
         class="foo.TextEditorDemo">
         <property name="velocityEngine" ref="beanVelocityEngine" />
     </bean>
-
-<!--        <property name="velocityProperties">
-            <value>
-                resource.loader=class
-                class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
-            </value>
-        </property>-->
 
 </beans>

@@ -1,6 +1,7 @@
 package foo;
 
 import com.alee.extended.panel.WebButtonGroup;
+import com.alee.laf.button.WebButton;
 import com.alee.laf.button.WebToggleButton;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -16,7 +17,8 @@ import org.fife.ui.rtextarea.RTextScrollPane;
  *
  * @author Rick
  */
-public class TemplateWorkspaceView extends JPanel {
+public class TemplateWorkspaceView extends JPanel
+    implements TemplateWorkspaceCallbacks {
 
     private static final long serialVersionUID = 1L;
 
@@ -56,16 +58,10 @@ public class TemplateWorkspaceView extends JPanel {
         final JPanel pnlNorth = new JPanel();
         pnlNorth.setLayout(new FlowLayout());
 
-        WebButtonGroup pnlEditorSelection = new WebButtonGroup ( true );
-        pnlEditorSelection.add( btnTemplateEditor = createEditorButton( editorHolder, Editor.TEMPLATE ) );
-        pnlEditorSelection.add( btnDataEditor = createEditorButton( editorHolder, Editor.DATA ) );
-        pnlEditorSelection.add( btnOutputEditor = createEditorButton( editorHolder, Editor.RESULT ) );
-        pnlNorth.add(pnlEditorSelection);
-
         WebButtonGroup pnlTemplateSelection = new WebButtonGroup ( true );
         pnlTemplateSelection.add(velocity = createEngineButton( Engine.VELOCITY ));
-        pnlTemplateSelection.add(freemarker = createEngineButton( Engine.FREEMARKER ));
         pnlTemplateSelection.add(thymeleaf = createEngineButton( Engine.THYMELEAF ));
+        pnlTemplateSelection.add(freemarker = createEngineButton( Engine.FREEMARKER ));
         pnlNorth.add(pnlTemplateSelection);
 
         WebButtonGroup pnlSyntaxSelection = new WebButtonGroup(true);
@@ -76,6 +72,15 @@ public class TemplateWorkspaceView extends JPanel {
         pnlSyntaxSelection.add(javascript = createSyntaxButton(Syntax.JAVASCRIPT));
         pnlSyntaxSelection.add(json = createSyntaxButton(Syntax.JSON));
         pnlNorth.add(pnlSyntaxSelection);
+
+        WebButtonGroup pnlEditorSelection = new WebButtonGroup ( true );
+        pnlEditorSelection.add( btnTemplateEditor = createEditorButton( editorHolder, Editor.TEMPLATE ) );
+        pnlEditorSelection.add( btnDataEditor = createEditorButton( editorHolder, Editor.DATA ) );
+        pnlEditorSelection.add( btnOutputEditor = createEditorButton( editorHolder, Editor.RESULT ) );
+        pnlNorth.add(pnlEditorSelection);
+        btnTemplateEditor.setSelected(true);
+
+        pnlNorth.add(this.createActionButton());
 
         dataEditor = new RSyntaxTextArea(20, 60);
             dataEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
@@ -109,6 +114,12 @@ public class TemplateWorkspaceView extends JPanel {
 
     }
 
+    private WebButton createActionButton( ) {
+        final WebButton b = new WebButton();
+        b.setAction(new ActionApplyTemplate(this));
+        return b;
+    }
+
     private WebToggleButton createEditorButton(JPanel p, Editor e) {
         final WebToggleButton b = new WebToggleButton();
         b.setAction(new ActionEditorSelector(p, e));
@@ -129,6 +140,18 @@ public class TemplateWorkspaceView extends JPanel {
 
     public void setTemplateSyntax(String syntax) {
         this.templateEditor.setSyntaxEditingStyle(syntax);
+    }
+
+    /**
+     * Reminder:  This is called from the Swing EDT.
+     */
+    @Override
+    public void ApplyTemplate() {
+        TemplateEngine te = this.datamodel.getEngine();
+        te.setDataModel(null);
+        te.ingestTemplate("testkey", this.templateEditor.getText());
+        final String out = te.applyTemplate("testkey");
+        this.resultEditor.setText(out);
     }
 
 }
