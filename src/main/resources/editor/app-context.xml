@@ -4,9 +4,11 @@
 
 <beans>
 
+    <!-- This is not necessary in the app context; just an example.
     <bean id="foundationFramework" init-method="init"
         class="org.jwellman.foundation.Foundation">
     </bean>
+    -->
 
     <bean id="beanVelocityEngine"
         class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
@@ -15,12 +17,11 @@
                 resource.loader = string
                 string.resource.loader.class = org.apache.velocity.runtime.resource.loader.StringResourceLoader
                 string.resource.loader.description = Velocity StringResource loader
-                </value>
+            </value>
         </property>
     </bean>
 
-    <bean id="beanUserInterface"
-        class="foo.TextEditorDemo">
+    <bean class="foo.EngineFactoryBean">
         <property name="velocityEngine" ref="beanVelocityEngine" />
     </bean>
 

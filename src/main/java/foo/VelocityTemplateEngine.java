@@ -85,10 +85,13 @@ class VelocityTemplateEngine implements TemplateEngine<VelocityEngine,Object> {
 
     private String applyVelocityTemplate(String s) {
         final StringWriter w = new StringWriter();
+
         final VelocityContext vc = new VelocityContext();
-        vc.put("w", "world!"); //dataModel);
+        //vc.put("w", "world!"); //dataModel); // this line works... trying next line
+        vc.put("datamodel", this.dataModel);
 
         Velocity.evaluate( vc, w, "logger", s );
+
         return w.toString();
     }
 

@@ -83,15 +83,17 @@ public class TemplateWorkspaceView extends JPanel
         pnlNorth.add(this.createActionButton());
 
         dataEditor = new RSyntaxTextArea(20, 60);
+            dataEditor.setCodeFoldingEnabled(true);
             dataEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
         resultEditor = new RSyntaxTextArea(20, 60);
             resultEditor.setCodeFoldingEnabled(true);
+            resultEditor.setEditable(false);
         templateEditor = new RSyntaxTextArea(20, 60);
             templateEditor.setCodeFoldingEnabled(true);
             templateEditor.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-        final RTextScrollPane spTemplateEditor = new RTextScrollPane(templateEditor);
         final RTextScrollPane spDataEditor = new RTextScrollPane(dataEditor);
         final RTextScrollPane spResultEditor = new RTextScrollPane(resultEditor);
+        final RTextScrollPane spTemplateEditor = new RTextScrollPane(templateEditor);
 
         this.editorHolder.add(spTemplateEditor, Editor.TEMPLATE.getUiMnemonic());
         this.editorHolder.add(spDataEditor, Editor.DATA.getUiMnemonic());
@@ -104,7 +106,8 @@ public class TemplateWorkspaceView extends JPanel
 
         try {
             Theme theme = Theme.load(getClass().getResourceAsStream(
-                    "/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
+                    "/org/jwellman/editor/themes/rsyntaxtextarea/dark.xml"));
+//                    "/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
             theme.apply(templateEditor);
             theme.apply(dataEditor);
             theme.apply(resultEditor);
@@ -140,6 +143,7 @@ public class TemplateWorkspaceView extends JPanel
 
     public void setTemplateSyntax(String syntax) {
         this.templateEditor.setSyntaxEditingStyle(syntax);
+        this.resultEditor.setSyntaxEditingStyle(syntax);
     }
 
     /**
@@ -147,8 +151,8 @@ public class TemplateWorkspaceView extends JPanel
      */
     @Override
     public void ApplyTemplate() {
-        TemplateEngine te = this.datamodel.getEngine();
-        te.setDataModel(null);
+        final TemplateEngine te = this.datamodel.getEngine();
+        // te.setDataModel(null); // TODO create datamodel from editor
         te.ingestTemplate("testkey", this.templateEditor.getText());
         final String out = te.applyTemplate("testkey");
         this.resultEditor.setText(out);

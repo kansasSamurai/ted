@@ -35,8 +35,13 @@ public class App implements uiCustomTheme {
      * @param args
      */
     public static void main(String[] args) {
+
+        // For now, only create Spring app context when running standalone;
+        // since there may already be a context when running embedded.
+        // Note, that it is not necessarily the existing context that "conflicts"
+        // but rather certain beans within the same JVM such as the VelocityEngine.
         final String[] contextPaths = new String[] {"editor/app-context.xml"};
-        new ClassPathXmlApplicationContext(contextPaths);
+        final ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(contextPaths);
 
         new App().startup(true, args);
     }
@@ -63,7 +68,7 @@ public class App implements uiCustomTheme {
         f.init(); // context
 
         // Step 2 - Create your UIs in JPanel(s)
-        mainui = f.registerUI("editor", new TextEditorDemo()); 
+        mainui = f.registerUI("editor", new TextEditorDemo());
 
         // Step 3 - Use Foundation to create your "window"; give it your UI.
         window = f.useWindow(mainui);

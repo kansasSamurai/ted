@@ -3,11 +3,11 @@ package foo;
 import java.util.Set;
 
 /**
+ * Data Model
  *
  * @author Rick
  */
 public class TemplateWorkspace {
-
 
     private TemplateEngine engine;
 
