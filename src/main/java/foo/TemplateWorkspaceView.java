@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.io.IOException;
+import java.util.HashMap;
 import javax.swing.JPanel;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -152,10 +153,21 @@ public class TemplateWorkspaceView extends JPanel
     @Override
     public void ApplyTemplate() {
         final TemplateEngine te = this.datamodel.getEngine();
-        // te.setDataModel(null); // TODO create datamodel from editor
+        te.setDataModel(this.getDataModel());
         te.ingestTemplate("testkey", this.templateEditor.getText());
         final String out = te.applyTemplate("testkey");
         this.resultEditor.setText(out);
+    }
+
+    private Object getDataModel() {
+        boolean simulate = true;
+        if (simulate) {
+            final HashMap m = new HashMap();
+            m.put("name", "World");
+            return m;
+        } else {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 
 }

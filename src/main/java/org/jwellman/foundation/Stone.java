@@ -82,7 +82,7 @@ public void init(uContext c) {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 final String name = info.getName(); System.out.println(name);
                 if ("Nimbus".equals(name)) {
-                    final int version = 2;
+                    final int version = 4;
                     switch (version) {
                         case 1:
                             UIManager.setLookAndFeel(info.getClassName());
@@ -96,6 +96,9 @@ public void init(uContext c) {
                             NapkinTheme.Manager.setCurrentTheme(themeToUse);
                             LookAndFeel laf = new NapkinLookAndFeel();
                             UIManager.setLookAndFeel(laf);
+                            break;
+                        case 4:
+                            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                             break;
                     }
 

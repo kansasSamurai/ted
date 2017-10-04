@@ -1,5 +1,6 @@
 package foo;
 
+import freemarker.template.Configuration;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.FactoryBean;
 
@@ -28,9 +29,7 @@ public class EngineFactoryBean implements FactoryBean<EngineFactory> {
 
     private VelocityEngine velocityEngine;
 
-    public VelocityEngine getVelocityEngine() {
-        return velocityEngine;
-    }
+    private Configuration freemarkerConfiguration;
 
     public void setVelocityEngine(VelocityEngine velocityEngine) {
         this.velocityEngine = velocityEngine;
@@ -38,6 +37,14 @@ public class EngineFactoryBean implements FactoryBean<EngineFactory> {
         final TemplateEngine te = new VelocityTemplateEngine();
         te.setEngine(velocityEngine);
         Engine.VELOCITY.setTemplateEngine(te);
+    }
+
+    public void setFreemarkerConfiguration(Configuration freemarkerConfiguration) {
+        this.freemarkerConfiguration = freemarkerConfiguration;
+        
+        final TemplateEngine te = new FreemarkerTemplateEngine();
+        te.setEngine(freemarkerConfiguration);
+        Engine.FREEMARKER.setTemplateEngine(te);
     }
 
 }

@@ -14,33 +14,27 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
+    <spring.version>4.2.6.RELEASE</spring.version>
   </properties>
 
   <dependencies>
 
-    <!-- http://mvnrepository.com/artifact/org.springframework/spring-core -->
-    <dependency>
+    <dependency> <!-- http://mvnrepository.com/artifact/org.springframework/spring-core -->
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
-        <version>4.2.6.RELEASE</version>
+        <version>${spring.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>4.2.6.RELEASE</version>
+      <version>${spring.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context-support</artifactId>
-      <version>4.2.6.RELEASE</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fifesoft</groupId>
-      <artifactId>rsyntaxtextarea</artifactId>
-      <version>2.5.6</version>
+      <version>${spring.version}</version>
     </dependency>
 
     <dependency>
@@ -50,16 +44,27 @@
     </dependency>
 
     <dependency>
+        <groupId>org.freemarker</groupId>
+        <artifactId>freemarker</artifactId>
+        <version>2.3.23</version>
+    </dependency>
+
+    <dependency>
         <groupId>org.thymeleaf</groupId>
         <artifactId>thymeleaf</artifactId>
         <version>3.0.0.RELEASE</version>
     </dependency>
 
-    <!-- http://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring4 -->
-    <dependency>
+    <dependency> <!-- http://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring4 -->
         <groupId>org.thymeleaf</groupId>
         <artifactId>thymeleaf-spring4</artifactId>
         <version>3.0.0.RELEASE</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fifesoft</groupId>
+      <artifactId>rsyntaxtextarea</artifactId>
+      <version>2.5.6</version>
     </dependency>
 
     <dependency>

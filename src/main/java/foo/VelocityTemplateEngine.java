@@ -3,13 +3,14 @@ package foo;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
 import org.apache.velocity.runtime.resource.util.StringResourceRepository;
-import org.apache.velocity.runtime.resource.util.StringResourceRepositoryImpl;
 
 /**
  *
@@ -18,9 +19,11 @@ import org.apache.velocity.runtime.resource.util.StringResourceRepositoryImpl;
 class VelocityTemplateEngine implements TemplateEngine<VelocityEngine,Object> {
 
     private VelocityEngine engine;
+
     private StringResourceRepository repo;
 
     private Object dataModel;
+
     private final Map<String,Object> mapOfTemplates = new HashMap<>();
 
     public VelocityTemplateEngine() {
@@ -76,11 +79,16 @@ class VelocityTemplateEngine implements TemplateEngine<VelocityEngine,Object> {
 
     @Override
     public String applyTemplate(String key) {
-        final Object o = this.mapOfTemplates.get(key);
-        if (o instanceof String)
-            return this.applyVelocityTemplate((String)this.mapOfTemplates.get(key));
+        try {
+            final Object o = this.mapOfTemplates.get(key);
+            if (o instanceof String)
+                return this.applyVelocityTemplate((String)this.mapOfTemplates.get(key));
 
-        return this.applyVelocityTemplate((Template)this.mapOfTemplates.get(key));
+            return this.applyVelocityTemplate((Template)this.mapOfTemplates.get(key));
+        } catch (Exception e) {
+            Logger.getLogger(VelocityTemplateEngine.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return "<<ERR237::Unable to process Velocity template>>";
     }
 
     private String applyVelocityTemplate(String s) {

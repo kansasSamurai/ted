@@ -21,8 +21,17 @@
         </property>
     </bean>
 
+    <bean id="beanFreeMarkerConfiguration"
+        class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="preferFileSystemAccess" value="false" />
+        <property name="preTemplateLoaders">
+            <bean class="freemarker.cache.StringTemplateLoader" />
+        </property>
+    </bean>
+
     <bean class="foo.EngineFactoryBean">
         <property name="velocityEngine" ref="beanVelocityEngine" />
+        <property name="freemarkerConfiguration" ref="beanFreeMarkerConfiguration" />
     </bean>
 
 </beans>

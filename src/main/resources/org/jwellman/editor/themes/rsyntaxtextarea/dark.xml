@@ -65,7 +65,7 @@
       <style token="PREPROCESSOR" fg="A082BD"/>
       <style token="REGEX" fg="d39745"/>
       <style token="SEPARATOR" fg="E8E2B7"/>
-      <style token="VARIABLE" fg="0000FF" bold="true"/>
+      <style token="VARIABLE" fg="ae9fbf" bold="true"/>
       <style token="WHITESPACE" fg="E0E2E4"/>
 
       <style token="ERROR_IDENTIFIER" fg="E0E2E4" bg="04790e"/>
