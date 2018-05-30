@@ -1,4 +1,4 @@
-package foo;
+package org.jwellman.ted;
 
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;

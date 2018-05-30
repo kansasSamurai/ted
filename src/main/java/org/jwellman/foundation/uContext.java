@@ -32,6 +32,10 @@ public class uContext {
 
     public void setDimension(int w, int h) { dimension = new Dimension(w,h); }
 
+    public void setDimension(int base) { this.setDimension(base, 9, 5); }
+    
+    public void setDimension(int base, int w, int h) { this.setDimension(base * w, base * h); }
+
     public Dimension getDimension() { return dimension; }
 
 }

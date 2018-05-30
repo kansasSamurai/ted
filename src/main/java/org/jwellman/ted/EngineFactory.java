@@ -1,6 +1,4 @@
-package foo;
-
-import org.apache.velocity.app.VelocityEngine;
+package org.jwellman.ted;
 
 /**
  * This class provides a way for the Engine enumeration to obtain needed references.

@@ -1,4 +1,4 @@
-package foo;
+package org.jwellman.ted;
 
 import freemarker.template.Configuration;
 import org.apache.velocity.app.VelocityEngine;
@@ -34,7 +34,7 @@ public class EngineFactoryBean implements FactoryBean<EngineFactory> {
     public void setVelocityEngine(VelocityEngine velocityEngine) {
         this.velocityEngine = velocityEngine;
 
-        final TemplateEngine te = new VelocityTemplateEngine();
+        final TemplateEngine<VelocityEngine,Object> te = new VelocityTemplateEngine();
         te.setEngine(velocityEngine);
         Engine.VELOCITY.setTemplateEngine(te);
     }
@@ -42,7 +42,7 @@ public class EngineFactoryBean implements FactoryBean<EngineFactory> {
     public void setFreemarkerConfiguration(Configuration freemarkerConfiguration) {
         this.freemarkerConfiguration = freemarkerConfiguration;
         
-        final TemplateEngine te = new FreemarkerTemplateEngine();
+        final TemplateEngine<Configuration,Object> te = new FreemarkerTemplateEngine();
         te.setEngine(freemarkerConfiguration);
         Engine.FREEMARKER.setTemplateEngine(te);
     }

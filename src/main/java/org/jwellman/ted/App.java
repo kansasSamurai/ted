@@ -1,14 +1,15 @@
-package foo;
+package org.jwellman.ted;
 
 import javax.swing.JPanel;
+
+import org.jwellman.foundation.uContext;
 import org.jwellman.foundation.Foundation;
 import org.jwellman.foundation.interfaces.uiCustomTheme;
 import org.jwellman.foundation.swing.IWindow;
-import org.jwellman.foundation.uContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Hello world!
+ * Foundation based application starter.
  *
  */
 public class App implements uiCustomTheme {
@@ -41,7 +42,8 @@ public class App implements uiCustomTheme {
         // Note, that it is not necessarily the existing context that "conflicts"
         // but rather certain beans within the same JVM such as the VelocityEngine.
         final String[] contextPaths = new String[] {"editor/app-context.xml"};
-        final ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(contextPaths);
+        @SuppressWarnings("unused")
+		final ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(contextPaths);
 
         new App().startup(true, args);
     }
@@ -58,14 +60,13 @@ public class App implements uiCustomTheme {
     private App startup(boolean asMainFrame, String[] args) {
 
         // Prepare - User Interface Context
-//        int uiunit = 65;
-//        final uContext context = uContext.createContext();
-//        context.setTheme(this);
-//        context.setDimension(uiunit * 5, uiunit * 9);
+        final uContext context = uContext.createContext();
+        context.setTheme(this);
+        context.setDimension(85);
 
         // Step 1 - Initialize Swing
         final Foundation f = Foundation.get();
-        f.init(); // context
+        f.init(context); // context
 
         // Step 2 - Create your UIs in JPanel(s)
         mainui = f.registerUI("editor", new TextEditorDemo());

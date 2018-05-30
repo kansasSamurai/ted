@@ -178,6 +178,7 @@ public void showGUI() {
 
                 // Display the window.
                 if (!isDesktop) frame.pack(); // [A]
+                frame.setSize(context.getDimension());
                 frame.setLocationRelativeTo(null); // [C]
                 frame.setVisible(true);
 
