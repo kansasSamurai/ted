@@ -79,16 +79,31 @@ class VelocityTemplateEngine implements TemplateEngine<VelocityEngine,Object> {
 
     @Override
     public String applyTemplate(String key) {
+        /* I honestly cannot remember why I did this this way... the obvious part is
+         * that I am allowing both a String to String association and a
+         * String to Template association; but why? I cannot remember.
+         * 
+         * My best guess is that I wanted to know if there were processing
+         * differences by the engine.  Obviously there is some subtle difference
+         * since I have to call a different implementation of applyVelocityTemplate()
+         * based on the type.
+         * 
+         * OK... I think I remember now... basically I was differentiating between
+         * an "unsaved new" file (i.e. String from the view) and
+         * a "saved/unsaved open" file (i.e. Template parsed via the ResourceManager). 
+         * 
+         */
         try {
             final Object o = this.mapOfTemplates.get(key);
-            if (o instanceof String)
+            if (o instanceof String) {
                 return this.applyVelocityTemplate((String)this.mapOfTemplates.get(key));
-
-            return this.applyVelocityTemplate((Template)this.mapOfTemplates.get(key));
+            } else {
+                return this.applyVelocityTemplate((Template)this.mapOfTemplates.get(key));                
+            }
         } catch (Exception e) {
             Logger.getLogger(VelocityTemplateEngine.class.getName()).log(Level.SEVERE, null, e);
+            return "<<ERR237::Unable to process Velocity template>>";
         }
-        return "<<ERR237::Unable to process Velocity template>>";
     }
 
     private String applyVelocityTemplate(String s) {
@@ -105,10 +120,12 @@ class VelocityTemplateEngine implements TemplateEngine<VelocityEngine,Object> {
 
     private String applyVelocityTemplate(Template t) {
         final StringWriter w = new StringWriter();
+        
         final VelocityContext vc = new VelocityContext();
         vc.put("w", "world!"); //dataModel);
 
         t.merge(vc, w);
+        
         return w.toString();
     }
     
