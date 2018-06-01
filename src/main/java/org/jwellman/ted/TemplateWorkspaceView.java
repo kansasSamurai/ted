@@ -3,12 +3,23 @@ package org.jwellman.ted;
 import com.alee.extended.panel.WebButtonGroup;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.button.WebToggleButton;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonTokenId;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.JPanel;
+
+import org.apache.commons.lang.time.DateUtils;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
@@ -36,7 +47,7 @@ public class TemplateWorkspaceView extends JPanel
     final private RSyntaxTextArea resultEditor;
 
     final private TemplateWorkspace datamodel;
-
+    
     // ----- Template Views -----
     final WebToggleButton btnDataEditor;
     final WebToggleButton btnOutputEditor;
@@ -55,6 +66,9 @@ public class TemplateWorkspaceView extends JPanel
     final WebToggleButton java;
     final WebToggleButton javascript;
     final WebToggleButton json;
+
+    // ----- FasterXML -----
+    private ObjectMapper mapper;
 
     public TemplateWorkspaceView() {
 
@@ -170,13 +184,59 @@ public class TemplateWorkspaceView extends JPanel
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private Object getDataModel() {
-        boolean simulate = true;
+        boolean simulate = false;
         if (simulate) {            
 			final HashMap m = new HashMap();
             m.put("name", "World");
             return m;
         } else {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String json = dataEditor.getText(); // "{\"name\":\"mkyong\", \"age\":29}";
+
+            // convert JSON string to Map
+            // reference:  https://www.leveluplunch.com/java/tutorials/033-custom-jackson-date-deserializer/
+            Map<String, Object> map = null;
+            try {
+                //map = mapper.readValue(json, new TypeReference<Map<String, String>>(){}); // This worked with velocity and a simple JSON object                
+                map = getObjectMapper().readValue(json, Map.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+            return map;
+        }
+    }
+    
+    private ObjectMapper getObjectMapper() {
+
+        if (mapper == null) {
+            final SimpleModule simpleModule = new SimpleModule();
+            simpleModule.addDeserializer(Object.class, new CustomDateDeserializer());
+
+            mapper = new ObjectMapper();    
+            mapper.registerModule(simpleModule);
+        }
+        
+        return mapper;
+    }
+    
+    @SuppressWarnings("deprecation")
+    private class CustomDateDeserializer extends UntypedObjectDeserializer {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Object deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+
+            if (jp.getCurrentTokenId() == JsonTokenId.ID_STRING) {
+                try {
+                    return DateUtils.parseDate(jp.getText(), new String[] {
+                            "yyyy-MM-dd", "MM/dd/yyyy", "yyyy.MM.dd G 'at' HH:mm:ss z" });
+                } catch (Exception e) {
+                    return super.deserialize(jp, ctxt);
+                }
+            } else {
+                return super.deserialize(jp, ctxt);
+            }
         }
     }
 
