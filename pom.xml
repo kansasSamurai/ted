@@ -18,9 +18,9 @@
   </properties>
 
   <dependencies>
-  
+
     <!-- http://mvnrepository.com/artifact/org.springframework/spring-core -->
-    <dependency> 
+    <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
         <version>${spring.version}</version>
@@ -68,6 +68,20 @@
       <version>2.5.6</version>
     </dependency>
 
+	<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-core</artifactId>
+	    <version>2.6.6</version>
+	</dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.6.6</version>
+    </dependency>
+
     <dependency>
         <groupId>com.mgarin</groupId>
         <artifactId>weblaf</artifactId>
@@ -98,5 +112,5 @@
         <url>file:${project.basedir}/repo</url>
     </repository>
   </repositories>
-  
+
 </project>

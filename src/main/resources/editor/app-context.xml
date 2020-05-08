@@ -29,7 +29,7 @@
         </property>
     </bean>
 
-    <bean class="foo.EngineFactoryBean">
+    <bean class="org.jwellman.ted.EngineFactoryBean">
         <property name="velocityEngine" ref="beanVelocityEngine" />
         <property name="freemarkerConfiguration" ref="beanFreeMarkerConfiguration" />
     </bean>
